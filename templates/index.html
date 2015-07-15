@@ -1,0 +1,60 @@
+{% extends 'template.html' %}
+
+{% block body %}
+  <table border=0 style="width:100%;border-spacing:0px 0px;border-collapse:separate">
+    <tr>
+      <td align="left" valign="top">
+        <div class="search_box">
+          <h2>Search for words</h2>
+          <form class="search_form" id="form" role="form" action="/find" method="get">
+            <div class="search_form_inr">
+              <input type="text" id="rack" name="rack" placeholder="Rack letters" maxlength="50" _autocomplete="off" required autofocus/>
+            </div>
+            <div class="search_form_inr">
+              <input type="text" id="patt" name="patt" placeholder="Pattern" maxlength="100" _autocomplete="off"/>
+            </div>
+            <div class="search_form_inr">
+              <input type="submit" value="SEARCH"/>
+            </div>
+          </form>
+        </div>
+      </td>
+      {% if not is_mobile %}
+        <td align="right" valign="middle" style="padding-left:20px">
+          <img width="100%" src="{{ url_for('static', filename='images/sidePic.png') }}" alt=""/>
+        </td>
+      {% endif %}
+    </tr>
+    <tr>
+      <td>
+        <br>
+        <br>
+        <br>
+    <tr>
+      <td colspan=2 align="center" valign="top">
+        <div class="rit_txt">
+          <h3>What is WordPicker?</h3>
+          <p align="left">Find words from letters and patterns for all popular word games such as Scrabble, Wordscraper, Lexulous, Words With Friends, Draw Something and 4 Pics 1 Word. It can even help with Boggle-like grid games, word ladder & crosswords too.
+          Use the advanced pattern matching facilities to help find words to fit around other words:</p>
+          <table border=0 style="width:100%;border-spacing:10px 5px;border-collapse:separate">
+            <tr>
+              <td>
+                <b>?</b>
+              <td>
+                matches a blank
+            <tr>
+              <td>
+                <b>$</b>
+              <td>
+                matches the beginning or end of a word
+            <tr>
+              <td>
+                <b>[<i>abc</i>]</b>
+              <td>
+                matches one letter from a specific set
+          </table>
+        </div>
+      </td>
+    </tr>
+  </table>
+{% endblock %}

@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta content="True" name="HandheldFriendly">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Find words from letters and patterns for all popular word games such as Scrabble, Wordscraper, Lexulous, Words With Friends, Draw Something and 4 Pics 1 Word. It can even help with Boggle-like grid games, word ladder & crosswords too.">
+    <meta name="keywords" content="Wordpicker scrabble anagram words with friends boggle draw something 4 pics 1 word wordladder crosswords wordscraper lexulous">
+    <title>{{ title }} - {{ subtitle }}</title>
+    <meta property="og:image" content="{{ url_for('static', filename='images/logo.png') }}" />
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
+    <!-- AngularJS -->
+    <script src="{{ url_for('static', filename='js/angular.js') }}"></script>
+    <!-- Favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='apple-touch-icon-57x57.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='apple-touch-icon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72" href="{{ url_for('static', filename='apple-touch-icon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144" href="{{ url_for('static', filename='apple-touch-icon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="60x60" href="{{ url_for('static', filename='apple-touch-icon-60x60.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ url_for('static', filename='apple-touch-icon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='apple-touch-icon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ url_for('static', filename='apple-touch-icon-152x152.png') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-96x96.png') }}" sizes="96x96">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-16x16.png') }}" sizes="16x16">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-32x32.png') }}" sizes="32x32">
+    <meta name="msapplication-TileColor" content="#da532c">
+    <meta name="msapplication-TileImage" content="{{ url_for('static', filename='mstile-144x144.png') }}">
+  </head>
+  <body ng-app="app" ng-controller="ctrl" ng-keypress="key($event)">
+    <div align="center">
+      <table border=0 style="width:100%;border-spacing:0px 0px;border-collapse:separate;min-width:640px;max-width:1024px">
+        <tr>
+          {% if not is_mobile %}
+            <td width="160px" valign="top">
+              {% set ad = 'publishers/' + publisher1 + '.htm' %}
+              {% include ad %}
+          {% endif %}
+          <td width="100%" align="center" valign="top" style="padding-left:20px;padding-right:20px">
+            {% include 'header.html' %}
+            <div>
+              <br>
+              <br>
+            </div>
+            {% block body %}
+            {% endblock %}
+          {% if not is_mobile %}
+            <td width="160px" valign="top">
+              {% set ad = 'publishers/' + publisher2 + '.htm' %}
+              {% include ad %}
+          {% endif %}
+        </tr>
+        <tr>
+          <td>
+            <br>
+        </tr>
+        <tr>
+          <td colspan=3 width="100%" align="center">
+            {% include 'footer.html' %}
+        </tr>
+      </table>
+      {% include 'tracking.html' %}
+    </div>
+
+    {% block scripts %}
+    {% endblock %}
+  </body>
+</html>

@@ -1,0 +1,65 @@
+/* Global properties */
+*{ padding:0px; margin:0px; outline:none; border:none; list-style:none; text-decoration:none; }
+.noBdr{ border:none !important; }
+
+@font-face {
+    font-family: 'BerlinSansFBRegular';
+    src: url('../fonts/brlnsr.eot');
+    src: url('../fonts/brlnsr.eot') format('embedded-opentype'),
+         url('../fonts/brlnsr.woff') format('woff'),
+         url('../fonts/brlnsr.ttf') format('truetype'),
+         url('../fonts/brlnsr.svg#BerlinSansFBRegular') format('svg');
+}
+
+body{ font:normal 14px/18px Arial, Helvetica, sans-serif; color:#000; background: url(../images/bodyBg.jpg) repeat-x 0 0;}
+
+/*===========index=============*/
+
+.search_box h2{font: normal 50px/52px 'BerlinSansFBRegular'; color: #000;}
+.search_form_inr{margin: 20px 0 0 0;}
+.search_form_inr input[type="text"]{width: 428px; height: 47px; background: url(../images/input.png) no-repeat center top; padding: 0 15px; font: normal 25px/47px 'BerlinSansFBRegular'; color: #b8b8b8;}
+.search_form_inr input[type="text"]:focus{width: 428px; height: 47px; background: url(../images/inputF.png) no-repeat center top;}
+.search_form_inr input[type="submit"]{width: 184px; height: 46px; background: url(../images/submitBtn.png) no-repeat center top; font: normal 20px/46px 'BerlinSansFBRegular'; color: #fff; text-align: center; cursor: pointer;}
+
+.rit_txt{font: normal 13px/22px Arial; color: #666666;}
+.rit_txt h3{font: normal 35px/36px 'BerlinSansFBRegular'; color: #1e1e1e;}
+.rit_txt p{font: normal 13px/22px Arial; color: #666666; padding: 15px 0 0 0;}
+
+/*===========result=============*/
+
+.mid_prt{min-width: 300px;}
+.mid_prt_top{height: 7px; background: url(../images/midTop.png) no-repeat left top; background-size: 100%;}
+.mid_prt_mid{background: url(../images/midMid.png); background-size: 100% 100%;}
+.mid_main_head{background: url(../images/sado.png) no-repeat center bottom; padding-bottom: 14px;}
+.mid_main_head h3{padding: 0 0 0 32px; font: normal 35px/54px 'BerlinSansFBRegular'; color: #1e1e1e;}
+.mid_main_head h3 span{color: #ff005a;}
+.inner_add{padding: 0 31px; font: normal 13px/22px Arial; color: #666666;}
+.top_letter ul{padding: 0; margin: 0;}
+.top_letter ul li{margin: 30px 0 0 0; font: normal 30px/32px 'BerlinSansFBRegular'; color: #747474;}
+.top_letter ul li span{font-size: 22px; color: #88bd40;}
+.mid_prt_bot{width: 100%; height: 7px; background: url(../images/midBot.png) no-repeat left bottom; background-size: 100%;}
+
+p {
+    color: #666666;
+    font: 15px/22px Arial;
+    padding: 15px 0 0;
+}
+
+/*===========footer=============*/
+
+.footer{border-top: 1px solid #c7cac8;}
+
+.find_box p{float: left; font: normal 14px/18px Arial; color: #a0a0a0; margin: -12px 10px 0 0;}
+.find_box ul{list-style:none; padding: 0; margin: 0;}
+.find_box ul li{float: left; margin: 0 10px 0 0;}
+
+.foot_rit_nav ul{list-style:none; padding: 0; margin: 0;}
+.foot_rit_nav ul li{float: right; margin: 0 12px 0 0;}
+.foot_rit_nav ul li a{font: normal 12px/18px Arial; color: #a0a0a0;}
+.foot_rit_nav ul li a:hover{color: #f5811f;}
+
+.copy_prt p{font: normal 12px/18px Arial; color: #a0a0a0; margin: -12px 0 0 0}
+.copy_prt p span{color: #f5811f;}
+
+.social ul{list-style:none; padding:0; margin:0;}
+.social ul li{float:right; list-style:none; padding-left:10px;}

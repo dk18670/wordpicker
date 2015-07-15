@@ -1,0 +1,11 @@
+{
+  "name":        "Word Picker",
+  "version":     "1",
+
+  "dependencies": {
+    "angularjs": "~1"
+  },
+
+  "devDependencies": {
+  }
+}

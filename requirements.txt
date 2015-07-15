@@ -1,0 +1,4 @@
+coverage
+Flask
+Jinja2
+nose

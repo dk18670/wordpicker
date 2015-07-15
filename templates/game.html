@@ -1,0 +1,261 @@
+{% extends 'template.html' %}
+
+{% block body %}
+  <style>
+    #board { background-color:#CCCCCC }
+    #board td { width:30px; height:30px }
+    .word4 { background-color:#C8A600 }
+    .word3 { background-color:#C60000 }
+    .word2 { background-color:#F5A9B0 }
+    .lett3 { background-color:#225FC5 }
+    .lett2 { background-color:#AFCFFE }
+    .blank { background-color:#F8F8F8 }
+    .info { background-color:#CCCCCC; }
+    .info td { background-color:#FFFDED; }
+    .players td { font-size:12px; font-weight:bold; padding:8px }
+    .players { color:#636361; }
+    .players .active { color:#DB0101; }
+    .status td { font-size:10px; font-weight:bold; padding:8px }
+    .turn { color:#FF6905; }
+    .last_move { color:#009CDA; text-decoration:underline; }
+    .actions td { font-size:10px; font-weight:bold }
+    .commands td { font-size:16px; font-weight:bold; }
+    button {
+      width:90px;
+      background-image: -webkit-linear-gradient(top, #FEFEFE, #E1E1E1);
+      background-image: -moz-linear-gradient(top, #FEFEFE, #E1E1E1);
+      background-image: -ms-linear-gradient(top, #FEFEFE, #E1E1E1);
+      background-image: -o-linear-gradient(top, #FEFEFE, #E1E1E1);
+      background-image: linear-gradient(to bottom, #FEFEFE, #E1E1E1);
+      -webkit-border-radius: 5;
+      -moz-border-radius: 5;
+      border-radius: 5px;
+      border-style: solid;
+      border-width: 1px;
+      border-color: #CCCCCC;
+      padding: 10px 20px 10px 20px;
+    }
+    .letter { font-size:22px; position:relative; top:3px; left:2px }
+    .value { font-size:9px; position:relative; top:3px }
+    .tile { background-color:#FFDB5F; outline-width:1px; outline-style:solid; outline-color:#AAAAAA; }
+    .last { background-color:#FFA55F; }
+    .placed { background-color:#D7D7D7; }
+  </style>
+
+  {% set types = ['blank','lett2','lett3','word2','word3','word4'] %}
+
+  <table width="100%" border=0 style="border-spacing:5px 5px; border-collapse:separate">
+    <tr>
+      <td>
+        <!--table id="board" rows={{ size }} cols={{ size }} width="{{ size*cell+size+1 }}px" height="{{ size*cell+size+1 }}px" border=0 style="border-spacing:1px 1px; border-collapse:separate">
+          {% for y in range(size) %}
+            <tr>
+              {% for x in range(size) %}
+                <td style="width:{{ cell }}px; height:{{ cell }}px" class="{{ types[board[y*size+x]|byte(1)] }}">
+                  <br>
+                </td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </table-->
+        <table id="board" rows={{ size }} cols={{ size }} width="{{ size*cell+size+1 }}px" height="{{ size*cell+size+1 }}px" border=0 style="border-spacing:1px 1px; border-collapse:separate">
+          <tr ng-repeat="chunk in chunked">
+            <td ng-repeat="elem in chunk track by $index" ng-class="gridcls(elem)">
+              <div class="letter" ng-cloak align="center">{% raw %}{{lettchr(elem)}}{% endraw %}<span class="value">{% raw %}{{lettval(elem)}}{% endraw %}</span></div>
+            </td>
+        </table>
+      <td>
+        <table class="info" width="200px" height="{{ size*cell+size+1 }}" border=0 style="border-spacing:1px 1px; border-collapse:separate">
+          <tr class="players">
+            <td class="names" width="75%">
+              <div ng-class="{active:player_turn==0}">{{ player_names[0] }}</div>
+              <div ng-class="{active:player_turn==1}">{{ player_names[1] }}</div>
+              <br>
+              <br>
+            <td class="scores" width="25%" align="center">
+              <div ng-class="{active:player_turn==0}">{{ player_scores[0] }}</div>
+              <div ng-class="{active:player_turn==1}">{{ player_scores[1] }}</div>
+              <br>
+              <br>
+          <tr class="status">
+            <td colspan=2>
+              <span class="turn" ng-cloak ng-show="player_turn==0">Your turn.</span>
+              <span class="turn" ng-cloak ng-show="player_turn==1">{{ player_names[1] }}'s turn.</span>
+              Last move was <span class="last_move">{{ last_move }}</span> by {{ player_names[last_player] }} for {{ last_score }} points. {{ tiles_left }} tiles left.
+              <br>
+              <br>
+          <tr class="actions">
+            <td colspan=2>
+              <table width="100%" border=0 style="border-spacing:0px 0px; border-collapse:separate">
+                <tr>
+                  <td align="center">CHAT</td>
+                  <td align="center">DICTIONARY</td>
+                  <td align="center">MOVES</td>
+              </table>
+          <tr class="window" height="100%">
+            <td colspan=2>
+              <br>
+          <tr class="commands">
+            <td colspan=2>
+              <table width="100%" border=0 style="border-spacing:8px 8px; border-collapse:separate">
+                <tr>
+                  <td width="50%" align="center" valign="middle">
+                    <button id="button1" ng-cloak ng-if="tiles_placed()">PLAY</button>
+                    <button id="button1" ng-cloak ng-if="!tiles_placed()">NEXT</button>
+                  <td width="50%" align="center" valign="middle">
+                    <button id="button2" ng-cloak ng-if="tiles_placed()">SWAP</button>
+                    <button id="button2" ng-cloak ng-if="!tiles_placed()">PASS</button>
+              </table>
+        </table>
+  </table>
+{% endblock %}
+
+{% block scripts %}
+  <script language="javascript">
+    angular.module('app', [])
+    .controller('ctrl', function($scope, $http) {
+      var types = ['blank','lett2','lett3','word2','word3','word4'];
+      var values = [1,4,5,2,1,5,2,4,1,10,6,1,2,1,1,2,12,1,1,2,1,5,5,10,5,12];
+      var table = document.getElementById('board');
+      var rect = table.getBoundingClientRect();
+      var x = 0;
+      var y = 0;
+      var dir = 0;
+
+      function ord(c) {
+        return c.charCodeAt(0);
+      }
+      function chr(v) {
+        return String.fromCharCode(v);
+      }
+      function byte(elem,n) {
+        return (elem>>>(8*n))&0xFF;
+      }
+      function mask(n) {
+        return 0xFF<<(8*n)
+      }
+      function chunk(arr, size) {
+        var newArr = [];
+        for (var i=0; i<arr.length; i+=size) {
+          var s=arr.slice(i,i+size);
+          newArr.push(s);
+        }
+        return newArr;
+      }
+      function mkgrid(board) {
+        return chunk(board, {{ size }});
+      }
+      function letter(elem) {
+        return byte(elem,0);
+      }
+      function type(elem) {
+        return byte(elem,1);
+      }
+      function tile(elem) {
+        return byte(elem,2);
+      }
+      function elem(board,x,y) {
+        return board[y*{{ size }}+x];
+      }
+      function updgrid(board) {
+        for (var y=0; y<{{ size }}; y++) {
+          var tr = table.children[y];
+          for (var x=0; x<{{ size }}; x++) {
+            var td = tr.children[x];
+            td.className = gridcls(elem(board,x,y));
+          }
+        }
+      }
+      function set_letter(board,x,y,letter) {
+        board[y*{{ size }}+x] = (elem(board,x,y)&(~mask(0))) + letter;
+      }
+
+      $scope.y = function(idx) {
+        return (idx/{{ size }})>>0;
+      }
+      $scope.x = function(idx) {
+        return idx%{{ size }};
+      }
+      $scope.top = function(idx) {
+        var y = $scope.y(idx);
+        return (y*{{ cell }} + y+1 + rect.top) + 'px';
+      }
+      $scope.left = function(idx) {
+        var x = $scope.x(idx);
+        return (x*{{ cell }} + x+1 + rect.left) + 'px';
+      }
+      $scope.type = function(elem) {
+        return byte(elem,1);
+      }
+      $scope.letter = function(elem) {
+        return byte(elem,0);
+      }
+      $scope.gridcls = function(elem) {
+        var e = letter(elem);
+        if (e) {
+          var e = tile(elem);
+          if (e == 0) return 'tile';
+          if (e == 1) return 'last';
+          if (e == 2) return 'placed';
+        }
+        var e = type(elem);
+        return types[e];
+      }
+      $scope.lettchr = function(elem) {
+        var e = letter(elem);
+        if (e == 0) return ' ';
+        return String.fromCharCode(e);
+      }
+      $scope.lettval = function(elem) {
+        var e = letter(elem);
+        if (e < ord('A') || e > ord('Z')) return ' ';
+        var v = values[e-ord('A')];
+        return v.toString();
+      }
+      $scope.tiles_placed = function() {
+        return $scope.placed.length>0;
+      }
+
+      $scope.board = {{ board }};
+      $scope.chunked = mkgrid($scope.board);
+      $scope.player_turn = {{ player_turn }};
+      $scope.placed = [];
+
+      //updgrid($scope.board);
+
+      // Handle keypress
+      $scope.key = function(e) {
+        while (letter(elem($scope.board,x,y))) {
+          if (dir==0) x=x+1;
+          if (dir==1) y=y+1;
+        }
+        set_letter($scope.board,x,y,e.keyCode);
+        if (dir==0) x=x+1;
+        if (dir==1) y=y+1;
+        $scope.chunked = mkgrid($scope.board);
+      }
+
+      // Handle Make Default button
+      $scope.default = function(e) {
+        $http.post('/mlmasterphoto', {elem: elem}).
+          success(function(data, status, headers, config) {
+            if (data.error)
+              jsShowError(data.error);
+            else if (data.message) {
+              jsShowMessage(data.message);
+              $scope.master = data.master;
+            }
+          }).
+          error(function(data, status, headers, config) {
+            jsShowError("There's a problem with your Internet connection.");
+          });
+      }
+
+      // Handle Clear button
+      $scope.clear = function(e) {      
+        $scope.sels = [];
+      }
+
+    });
+  </script>
+{% endblock %}

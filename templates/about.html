@@ -1,0 +1,99 @@
+{% extends 'template.html' %}
+
+{% block body %}
+<div class="mid_prt">
+  <div class="mid_prt_top"></div>
+  <div class="mid_prt_mid">
+    <div class="mid_main" align="left">
+      <div class="mid_main_head">
+        <h3>About us</h3>
+      </div>
+      <div class="inner_add">
+        <p>Our software allows you to find words from letters and patterns for all popular word games such as Scrabble, Wordscraper, Lexulous, Words With Friends, Draw Something and 4 Pics 1 Word. It can even help with Boggle-like grid games, word ladder & crosswords too.<br><br>
+        We have developed an advanced pattern matching facility to help find words to fit around other words:</p>
+        <table border=0 style="border-spacing:20px 5px;border-collapse:separate">
+          <tr>
+            <td>
+          <b>?</b>
+            <td>
+              matches a blank
+          <tr>
+            <td>
+              <b>$</b>
+            <td>
+              matches the beginning or end of a word
+          <tr>
+            <td>
+              <b>[<i>abc</i>]</b>
+            <td>
+              matches one letter from a specific set
+          <tr>
+            <td>
+              <b><i>n</i></b>
+            <td>
+              matches exactly <i>n</i> letters
+        </table>
+        <p>Here are some examples of how to use the pattern matching option:</p>
+        <table border=0 style="border-spacing:20px 5px;border-collapse:separate">
+          <tr>
+            <th align="left">
+              Search for words:
+            <th align="left">
+              Use pattern:
+          <tr>
+            <td>
+              starting with NO
+            <td>
+              &dollar;NO
+          <tr>
+            <td>
+              ending with ING
+            <td>
+              ING&dollar;
+          <tr>
+            <td>
+              including POST
+            <td>
+              POST
+          <tr>
+            <td>
+              of at least 3 letters
+            <td>
+              ???
+          <tr>
+            <td>
+              of exactly 5 letters
+            <td>
+              5
+          <tr>
+            <td>
+              that match MIS followed by at least 1 letter
+            <td>
+              MIS?
+          <tr>
+            <td>
+              matching one letter from AEIOU
+            <td>
+              [AEIOU]
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="mid_prt_bot"></div>
+  <table border=0 style="width:100%;border-spacing:10px 25px;border-collapse:separate">
+    <tr>
+      <td width="50%" align="center" valign="top">
+        <!--Facebook feed starts-->
+        <iframe src="http://www.facebook.com/plugins/likebox.php?href=https%3A%2F%2Fwww.facebook.com%2Fwordpicker&amp;width=350&amp;height=600&amp;colorscheme=light&amp;show_faces=true&amp;header=true&amp;stream=true&amp;show_border=true" scrolling="no" frameborder="0" style="border:none; overflow:hidden; width:350px; height:600px;" allowTransparency="true"></iframe>
+        <!--Facebook feed ends-->
+      </td>
+      <td width="50%" align="center" valign="top">
+        <!--Twitter feed starts-->
+        <a class="twitter-timeline" href="https://twitter.com/hashtag/wordpicker" data-widget-id="499207131115966465">#wordpicker Tweets</a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+        <!--Twitter feed end-->
+      </td>
+    </tr>
+  </table>
+</div>
+{% endblock %}
