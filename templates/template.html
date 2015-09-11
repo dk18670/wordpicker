@@ -9,8 +9,6 @@
     <title>{{ title }} - {{ subtitle }}</title>
     <meta property="og:image" content="{{ url_for('static', filename='images/logo.png') }}" />
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" type="text/css" />
-    <!-- AngularJS -->
-    <script src="{{ url_for('static', filename='js/angular.js') }}"></script>
     <!-- Favicon -->
     <link rel="apple-touch-icon" sizes="57x57" href="{{ url_for('static', filename='apple-touch-icon-57x57.png') }}">
     <link rel="apple-touch-icon" sizes="114x114" href="{{ url_for('static', filename='apple-touch-icon-114x114.png') }}">
@@ -25,6 +23,8 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon-32x32.png') }}" sizes="32x32">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="{{ url_for('static', filename='mstile-144x144.png') }}">
+
+    {% include 'cookies.html' %}
   </head>
   <body ng-app="app" ng-controller="ctrl" ng-keypress="key($event)">
     <div align="center">

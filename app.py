@@ -22,7 +22,7 @@ def info(str):
 class MyFlask(Flask):
   def get_send_file_max_age(self, name):
     if re.search('\.(js|css|png|jpg|ico|woff|ttf|eof|svg)$', name.lower()):
-      return 7*24*60*60
+      return 28*24*60*60 # 28 days
     return Flask.get_send_file_max_age(self, name)
 
 # Jinja filters

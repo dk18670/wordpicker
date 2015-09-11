@@ -2,16 +2,16 @@
 
 import sys
 
-def perm(l):
-  # Compute the list of all permutations of l
-  if len(l) <= 1:
-    yield l
+def perm(s):
+  # Compute the list of all permutations of s
+  if len(s) <= 1:
+    yield s
   else:
-    for i in range(len(l)):
-      s = l[:i] + l[i+1:]
-      p = perm(s)
-      for x in p:
-	yield l[i:i+1] + x
+    for i in range(len(s)):
+      c = s[i]
+      rest = s[:i] + s[i+1:]
+      for x in perm(rest):
+        yield c + x
 
 for item in perm(sys.argv[1]):
   print item
