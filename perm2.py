@@ -2,21 +2,21 @@
 
 import sys, math
 
-def swap(s,i):
-  return s[:i]+s[i+1]+s[i]+s[i+1+1:]
-
 def perm(s):
   # Compute the list of all permutations of s
   if len(s) <= 1:
     yield s
   else:
     i = 0
-    for x in xrange(math.factorial(len(s))):
+    l = len(s)
+    for x in xrange(math.factorial(l)):
       yield s
-      s = swap(s,i)
+      t = s[i]
+      s[i] = s[i+1]
+      s[i+1] = t
       i += 1
-      if i>=len(s)-1:
+      if i>=l-1:
         i = 0
 
-for item in perm(sys.argv[1]):
-  print item
+for item in perm(list(sys.argv[1])):
+  print ''.join(item)

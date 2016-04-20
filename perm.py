@@ -7,11 +7,11 @@ def perm(s):
   if len(s) <= 1:
     yield s
   else:
-    for i in range(len(s)):
+    for i in xrange(len(s)):
       c = s[i]
       rest = s[:i] + s[i+1:]
       for x in perm(rest):
-        yield c + x
+        yield [c] + x
 
-for item in perm(sys.argv[1]):
-  print item
+for item in perm(list(sys.argv[1])):
+  print ''.join(item)

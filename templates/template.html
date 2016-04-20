@@ -24,6 +24,9 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="{{ url_for('static', filename='mstile-144x144.png') }}">
 
+    {% set ad = 'publishers/' + publisher1 + '-mobile.htm' %}
+    {% include ad %}
+
     {% include 'cookies.html' %}
   </head>
   <body ng-app="app" ng-controller="ctrl" ng-keypress="key($event)">
