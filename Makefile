@@ -1,4 +1,6 @@
 all: 
 
-run_tests:
+.FORCE:
+
+tests: .FORCE
 	nosetests --with-coverage

@@ -5,22 +5,35 @@ BASE_DIR = os.path.dirname(__file__)
 def gen_match(chars,mask):
   # remove the matched chars and leave the . chars
   # eg mask='P.AY.R' then match='.R..E.'
-  match = ''
-  for i in xrange(len(mask)):
-    match += chars[i] if mask[i]=='.' else '.'
+  match = ''.join(map(lambda x:x[0] if x[1]=='.' else '.', zip(chars,mask)))
   return match
 
+def canmatch(chars,rack):
+  # check that all chars are also in rack
+  for c in chars:
+    if c=='.' or c==' ':
+      continue
+    m = re.search(c,rack)
+    if not m:
+      m = re.search('\.',rack)
+      if not m:
+        return False
+    rack = rack[:m.start()]+rack[m.end():]
+    #del rack[m.start()]
+  return True
+
 def search(rack,patt):
-  if not rack:
+  if not rack and not patt:
     return None
 
   min_len = 1
-  max_len = len(rack)
+  max_len = len(rack) if rack else 15
 
-  # strip out any unwanted characters
-  rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
-  # replace ?_- chars with .
-  rack = re.sub('[?_\-]', '.', rack)
+  if rack:
+    # strip out any unwanted characters
+    rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
+    # replace ?_- chars with .
+    rack = re.sub('[?_\-]', '.', rack)
   if patt:
     beg = patt.startswith('$')
     end = patt.endswith('$')
@@ -36,19 +49,6 @@ def search(rack,patt):
     if end: patt = patt+'$'
     min_len = min(min_len,len(mask))
     max_len += len(mask)
-
-  def canmatch(chars,rack):
-    # check that all chars are also in rack
-    for c in chars:
-      if c=='.':
-        continue
-      m = re.search(c,rack)
-      if not m:
-        m = re.search('\.',rack)
-        if not m:
-          return False
-      rack = rack[:m.start()]+rack[m.end():]
-    return True
 
   matches = []
   with open(os.path.join(BASE_DIR, 'sowpods.txt')) as file:
@@ -79,19 +79,6 @@ def search2(rack,patts):
   # replace ?_- chars with .
   rack = re.sub('[?_\-]', '.', rack)
 
-  def canmatch(chars,rack):
-    # check that all chars are also in rack
-    for c in chars:
-      if c=='.' or c==' ':
-        continue
-      m = re.search(c,rack)
-      if not m:
-        m = re.search('\.',rack)
-        if not m:
-          return False
-      rack = rack[:m.start()]+rack[m.end():]
-    return True
-
   def scan(rack, min_len, max_len, patt=None, mask=None):
     matches = []
     with open(os.path.join(BASE_DIR, 'sowpods.txt')) as file:
@@ -103,10 +90,7 @@ def search2(rack,patts):
         if patt:
           m = re.search(patt, word)
           if m:
-            # remove the matched chars and leave the . chars, eg patt='P.AY.R' match='.R..E.'
-            match = ''
-            for i in xrange(len(mask)):
-              match += m.group()[i] if mask[i]=='.' else '.'
+            match = gen_match(m.group(), mask)
             chars = word[:m.start()]+match+word[m.end():]
             if canmatch(chars,rack):
               matches.append(word)

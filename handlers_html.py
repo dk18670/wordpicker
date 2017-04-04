@@ -32,10 +32,10 @@ def handle_find(entry,values):
       patts = []
       parts = patt.replace(',','/').split('/')
       if len(parts) > 1:
-	for part in parts:
-	  patts.append(format_patt(part, True))
+        for part in parts:
+          patts.append(format_patt(part, True))
       if len(patts) > 1:
-	matches = search.search2(rack, patts)
+        matches = search.search2(rack, patts)
   if matches is None:
     matches = search.search(rack, format_patt(patt))
 
