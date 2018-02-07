@@ -9,6 +9,8 @@ def gen_match(chars,mask):
   return match
 
 def canmatch(chars,rack):
+  if not rack:
+    return True
   # check that all chars are also in rack
   for c in chars:
     if c=='.' or c==' ':

@@ -22,5 +22,15 @@ class TestCases(unittest.TestCase):
     results = ['ETH', 'HETH', 'HITHE', 'HYTHE', 'KHETH', 'KITH', 'KITHE', 'KYTHE', 'TETH', 'THE', 'THEY', 'THY', 'TITHE', 'TYTHE']
     self.assertEqual(matches, results)
 
+  def test_rack_with_multi_pattern(self):
+    matches = search.search2('INTEALI', ['$..$','$.....$'])
+    results = ['EH', 'EIK', 'ET', 'ETH', 'HE', 'HET', 'HEY', 'HI', 'HIE', 'HIKE', 'HIT', 'HYE', 'HYKE', 'HYTE', 'IT', 'KET', 'KEY', 'KHET', 'KHI', 'KI', 'KIT', 'KITE', 'KITH', 'KITHE', 'KY', 'KYE', 'KYTE', 'KYTHE', 'TE', 'THE', 'THEY', 'THY', 'TI', 'TIE', 'TIKE', 'TYE', 'TYKE', 'YE', 'YEH', 'YET', 'YETI', 'YIKE', 'YITE']
+    self.assertEqual(matches, results)
+
+  def test_pattern(self):
+    matches = search.search(None, '$AZON')
+    results = ['AZON', 'AZONAL', 'AZONIC', 'AZONS']
+    self.assertEqual(matches, results)
+
 if __name__ =='__main__':
   unittest.main()
