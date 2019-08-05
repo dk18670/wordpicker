@@ -1,1 +1,3 @@
+User-agent: *
+
 Sitemap: http://www.wordpicker.net/sitemap.xml

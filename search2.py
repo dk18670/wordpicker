@@ -1,7 +1,43 @@
-import csv, re, datetime
+import csv, re, datetime, collections, copy
+
+def encounter(s):
+  ret = collections.Counter()
+  for c in s:
+    ret[c] += 1
+  return ret
+
+def decounter(counter):
+  return ''.join([k*v for k,v in counter.items()])
+
+def canmatch(chars,rack):
+  # check that all chars are also in rack
+  for c in chars:
+    if c=='.' or c==' ':
+      continue
+    m = re.search(c,rack)
+    if not m:
+      m = re.search('\.',rack)
+      if not m:
+        return False
+    rack = rack[:m.start()]+rack[m.end():]
+  return True
+
+def canmatch2(chars,rack):
+  #print('chars,rack:',chars,rack)
+  rack = rack.copy()
+  # check that all chars are also in rack
+  for c in chars:
+    if c=='.' or c==' ':
+      continue
+    if not rack[c]:
+      c = '.'
+      if not rack[c]:
+        return False
+    rack[c] -= 1
+  return True
 
 def gen_match(chars,mask):
-  print 'gen_match:', chars, mask
+  #print 'gen_match:', chars, mask
   # remove the matched chars and leave the . chars
   # eg mask='P.AY.R' then match='.R..E.'
   match = ''
@@ -38,19 +74,7 @@ def search(rack,patt):
     max_len += len(mask)
     print mask
 
-  def canmatch(chars,rack):
-    if not rack: return True
-    # check that all chars are also in rack
-    for c in chars:
-      if c=='.':
-        continue
-      m = re.search(c,rack)
-      if not m:
-        m = re.search('\.',rack)
-        if not m:
-          return False
-      rack = rack[:m.start()]+rack[m.end():]
-    return True
+  rack = encounter(rack)
 
   matches = []
   with open('sowpods.txt') as file:
@@ -62,20 +86,19 @@ def search(rack,patt):
       if patt:
         m = re.search(patt, word)
         if m:
+          #print(word,patt,m.group())
           match = gen_match(m.group(), mask)
           chars = word[:m.start()]+match+word[m.end():]
-          if canmatch(chars,rack):
+          if not rack or canmatch2(chars,rack):
             matches.append(word)
       else:
-        if canmatch(word,rack):
+        if not rack or canmatch2(word,rack):
           matches.append(word)
 
   return matches if len(matches) else None
 
-now = datetime.datetime.now()
 
 def search2(rack,patts):
-  global now
   print rack, patts
 
   if not rack:
@@ -85,19 +108,6 @@ def search2(rack,patts):
   rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
   # replace ?_- chars with .
   rack = re.sub('[?_\-]', '.', rack)
-
-  def canmatch(chars,rack):
-    # check that all chars are also in rack
-    for c in chars:
-      if c=='.' or c==' ':
-        continue
-      m = re.search(c,rack)
-      if not m:
-        m = re.search('\.',rack)
-        if not m:
-          return False
-      rack = rack[:m.start()]+rack[m.end():]
-    return True
 
   def scan(rack, min_len, max_len, patt=None, mask=None):
     print 'scan:', rack, min_len, max_len, patt, mask
@@ -142,6 +152,7 @@ def search2(rack,patts):
   if not patts or len(patts)==0:
     return scan(rack, 1, len(rack))
 
+  now = datetime.datetime.now()
   results =[]
   masks = []
   for patt in patts:
@@ -162,7 +173,7 @@ def search2(rack,patts):
     matches = scan(rack, min_len, max_len, patt, mask)
     results.append(matches)
     masks.append(mask)
-  print 'compiling results:', datetime.datetime.now()-now
+  print 'compiling results took:', datetime.datetime.now()-now
   now = datetime.datetime.now()
   n = 1
   for result in results:

@@ -6,12 +6,17 @@
                       http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
  <url>
   <loc>http://www.wordpicker.net/</loc>
-  <lastmod>2018-01-29T16:31:29Z</lastmod>
+  <lastmod>2019-03-29T12:17:34Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://www.wordpicker.net/BingSiteAuth.xml</loc>
   <lastmod>2015-02-24T15:49:40Z</lastmod>
+  <priority>0.5000</priority>
+ </url>
+ <url>
+  <loc>http://www.wordpicker.net/UnxUtils.zip</loc>
+  <lastmod>2007-03-01T14:25:34Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
@@ -262,17 +267,17 @@
  </url>
  <url>
   <loc>http://www.wordpicker.net/js/angular.js</loc>
-  <lastmod>2018-01-03T09:31:14Z</lastmod>
+  <lastmod>2019-04-24T16:09:31Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://www.wordpicker.net/js/angular.min.js</loc>
-  <lastmod>2018-01-03T09:31:14Z</lastmod>
+  <lastmod>2019-04-24T16:09:31Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
   <loc>http://www.wordpicker.net/js/index.js</loc>
-  <lastmod>2018-01-03T09:31:14Z</lastmod>
+  <lastmod>2019-04-24T16:09:31Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>
@@ -302,7 +307,7 @@
  </url>
  <url>
   <loc>http://www.wordpicker.net/robots.txt</loc>
-  <lastmod>2015-01-21T15:45:53Z</lastmod>
+  <lastmod>2018-11-27T10:06:19Z</lastmod>
   <priority>0.5000</priority>
  </url>
  <url>

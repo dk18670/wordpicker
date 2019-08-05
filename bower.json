@@ -1,5 +1,5 @@
 {
-  "name":        "Word Picker",
+  "name":        "wordpicker",
   "version":     "1",
 
   "dependencies": {
