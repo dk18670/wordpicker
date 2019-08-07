@@ -1,4 +1,6 @@
-import csv, re, datetime, collections, copy
+import os, csv, re, datetime, collections, copy
+
+BASE_DIR = os.path.dirname(__file__)
 
 
 class WPCounter(collections.Counter):
@@ -50,7 +52,7 @@ def gen_match(chars,mask):
 
 def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
   matches = []
-  with open('sowpods.txt') as file:
+  with open(os.path.join(BASE_DIR,'sowpods.txt')) as file:
     reader = csv.reader(file)
     for row in reader:
       word = row[0]
