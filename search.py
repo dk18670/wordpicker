@@ -1,28 +1,36 @@
-import os, csv, re
+import csv, re, datetime, collections, copy
 
-BASE_DIR = os.path.dirname(__file__)
+def encounter(s):
+  ret = collections.Counter()
+  for c in s:
+    ret[c] += 1
+  return ret
 
-def gen_match(chars,mask):
-  # remove the matched chars and leave the . chars
-  # eg mask='P.AY.R' then match='.R..E.'
-  match = ''.join(map(lambda x:x[0] if x[1]=='.' else '.', zip(chars,mask)))
-  return match
+def decounter(counter):
+  return ''.join([k*v for k,v in counter.items()])
 
 def canmatch(chars,rack):
-  if not rack:
-    return True
+  #print('chars,rack:',chars,rack)
+  rack = rack.copy()
   # check that all chars are also in rack
   for c in chars:
     if c=='.' or c==' ':
       continue
-    m = re.search(c,rack)
-    if not m:
-      m = re.search('\.',rack)
-      if not m:
+    if not rack[c]:
+      c = '.'
+      if not rack[c]:
         return False
-    rack = rack[:m.start()]+rack[m.end():]
-    #del rack[m.start()]
+    rack[c] -= 1
   return True
+
+def gen_match(chars,mask):
+  #print 'gen_match:', chars, mask
+  # remove the matched chars and leave the . chars
+  # eg mask='P.AY.R' then match='.R..E.'
+  match = ''
+  for i in xrange(len(mask)):
+    match += chars[i] if mask[i]=='.' else '.'
+  return match
 
 def search(rack,patt):
   if not rack and not patt:
@@ -51,9 +59,12 @@ def search(rack,patt):
     if end: patt = patt+'$'
     min_len = min(min_len,len(mask))
     max_len += len(mask)
+    #print mask
+
+  rack = encounter(rack)
 
   matches = []
-  with open(os.path.join(BASE_DIR, 'sowpods.txt')) as file:
+  with open('sowpods.txt') as file:
     reader = csv.reader(file)
     for row in reader:
       word = row[0]
@@ -62,15 +73,17 @@ def search(rack,patt):
       if patt:
         m = re.search(patt, word)
         if m:
+          #print(word,patt,m.group())
           match = gen_match(m.group(), mask)
           chars = word[:m.start()]+match+word[m.end():]
-          if canmatch(chars,rack):
+          if not rack or canmatch(chars,rack):
             matches.append(word)
       else:
-        if canmatch(word,rack):
+        if not rack or canmatch(word,rack):
           matches.append(word)
 
-  return matches
+  return matches if len(matches) else None
+
 
 def search2(rack,patts):
   if not rack:
@@ -81,9 +94,12 @@ def search2(rack,patts):
   # replace ?_- chars with .
   rack = re.sub('[?_\-]', '.', rack)
 
+  rack = encounter(rack)
+
   def scan(rack, min_len, max_len, patt=None, mask=None):
+    #print 'scan:', rack, min_len, max_len, patt, mask
     matches = []
-    with open(os.path.join(BASE_DIR, 'sowpods.txt')) as file:
+    with open('sowpods.txt') as file:
       reader = csv.reader(file)
       for row in reader:
         word = row[0]
@@ -92,17 +108,21 @@ def search2(rack,patts):
         if patt:
           m = re.search(patt, word)
           if m:
-            match = gen_match(m.group(), mask)
+            # remove the matched chars and leave the . chars, eg patt='P.AY.R' match='.R..E.'
+            match = ''
+            for i in xrange(len(mask)):
+              match += m.group()[i] if mask[i]=='.' else '.'
             chars = word[:m.start()]+match+word[m.end():]
             if canmatch(chars,rack):
               matches.append(word)
         else:
           if canmatch(word,rack):
             matches.append(word)
-
+ 
     return matches
 
   def expand(prefix,mask,results,masks,rack):
+    #print 'expand:', prefix, mask, masks, rack
     mask = mask+masks[0]
     if len(results)==1:
       for word in results[0]:
@@ -119,6 +139,7 @@ def search2(rack,patts):
   if not patts or len(patts)==0:
     return scan(rack, 1, len(rack))
 
+  now = datetime.datetime.now()
   results =[]
   masks = []
   for patt in patts:
@@ -139,7 +160,18 @@ def search2(rack,patts):
     matches = scan(rack, min_len, max_len, patt, mask)
     results.append(matches)
     masks.append(mask)
+  #print 'compiling results took:', datetime.datetime.now()-now
+  now = datetime.datetime.now()
+  n = 1
+  for result in results:
+    #print len(result), result
+    n *= len(result)
+  #print n, 'combinations..'
   matches = []
   for group in expand('','',results,masks,rack):
     matches.append(group)
+  td = datetime.datetime.now()-now
+  microseconds = (td.days*24*60*60 + td.seconds)*1000000 + td.microseconds
+  #print td, '= %d per second' % (n*1000000/microseconds)
+  now = datetime.datetime.now()
   return matches

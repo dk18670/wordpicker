@@ -1,6 +1,6 @@
 import unittest
 
-from search2 import canmatch, gen_match, search, search2
+from search2 import WPCounter, gen_match, search, search2
 
 class TestCases(unittest.TestCase):
 
@@ -10,7 +10,7 @@ class TestCases(unittest.TestCase):
 
   #@unittest.skip
   def test_canmatch(self):
-    result = canmatch('PAYER', 'P.Y.R')
+    result = 'PAYER' in WPCounter('P.Y.R')
     self.assertEqual(result, True)
 
   def test_rack(self):
