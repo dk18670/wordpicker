@@ -32,45 +32,11 @@ class WPCounter(collections.Counter):
     return True
 
 def gen_match(chars,mask):
-  #print('gen_match:', chars, mask)
   # remove the matched chars and leave the . chars
   # eg mask='P.AY.R' then match='.R..E.'
-  match = ''
-  for i in xrange(len(mask)):
-    match += chars[i] if mask[i]=='.' else '.'
-  return match
+  return ''.join([(chars[i] if m=='.' else '.') for i,m in enumerate(mask)])
 
-def search(rack,patt):
-  if not rack and not patt:
-    return None
-
-  min_len = 1
-  max_len = len(rack) if rack else 15
-
-  if rack:
-    # strip out any unwanted characters
-    rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
-    # replace ?_- chars with .
-    rack = re.sub('[?_\-]', '.', rack)
-  if patt:
-    beg = patt.startswith('$')
-    end = patt.endswith('$')
-    # strip out any unwanted characters
-    patt = re.sub('[^A-Z\.?_\-\[\]]','',patt.upper())
-    # replace ?_- chars with .
-    patt = re.sub('[?_\-]', '.', patt)
-    # compose a mask to remove matched chars
-    mask = re.sub('\[.*?\]','.',patt)
-    # if beginning match then add ^ prefix
-    if beg: patt = '^'+patt
-    # if end match then add $ suffix
-    if end: patt = patt+'$'
-    min_len = min(min_len,len(mask))
-    max_len += len(mask)
-    print(mask)
-
-  rack = WPCounter(rack)
-
+def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
   matches = []
   with open('sowpods.txt') as file:
     reader = csv.reader(file)
@@ -89,6 +55,46 @@ def search(rack,patt):
       else:
         if not rack or word in rack:
           matches.append(word)
+  return matches
+
+def search(rack,patt):
+  if not rack and not patt:
+    return None
+
+  min_len = 1
+  max_len = 15
+
+  if rack:
+    # strip out any unwanted characters
+    rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
+    # replace ?_- chars with .
+    rack = re.sub('[?_\-]', '.', rack)
+
+    rack = WPCounter(rack)
+
+    min_len = 1
+    max_len = len(rack)
+
+  if patt:
+    beg = patt.startswith('$')
+    end = patt.endswith('$')
+    # strip out any unwanted characters
+    patt = re.sub('[^A-Z\.?_\-\[\]]','',patt.upper())
+    # replace ?_- chars with .
+    patt = re.sub('[?_\-]', '.', patt)
+    # compose a mask to remove matched chars
+    mask = re.sub('\[.*?\]','.',patt)
+    # if beginning match then add ^ prefix
+    if beg: patt = '^'+patt
+    # if end match then add $ suffix
+    if end: patt = patt+'$'
+    min_len = len(mask)
+    max_len += len(mask)
+    print(mask)
+  else:
+    mask = None
+
+  matches = fetch_matching_words(rack, min_len, max_len, patt, mask)
 
   return matches if len(matches) else None
 
@@ -97,37 +103,18 @@ def search2(rack,patts):
   if not rack:
     return None
 
-  # strip out any unwanted characters
-  rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
-  # replace ?_- chars with .
-  rack = re.sub('[?_\-]', '.', rack)
+  min_len = 1
+  max_len = 15
 
-  rack = WPCounter(rack)
+  if rack:
+    # strip out any unwanted characters
+    rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
+    # replace ?_- chars with .
+    rack = re.sub('[?_\-]', '.', rack)
 
-  def scan(rack, min_len, max_len, patt=None, mask=None):
-    print('scan:', rack, min_len, max_len, patt, mask)
-    matches = []
-    with open('sowpods.txt') as file:
-      reader = csv.reader(file)
-      for row in reader:
-        word = row[0]
-        if not min_len <= len(word) <= max_len:
-          continue
-        if patt:
-          m = re.search(patt, word)
-          if m:
-            # remove the matched chars and leave the . chars, eg patt='P.AY.R' match='.R..E.'
-            match = ''
-            for i in xrange(len(mask)):
-              match += m.group()[i] if mask[i]=='.' else '.'
-            chars = word[:m.start()]+match+word[m.end():]
-            if chars in rack:
-              matches.append(word)
-        else:
-          if word in rack:
-            matches.append(word)
- 
-    return matches
+    max_len = len(rack)
+
+    rack = WPCounter(rack)
 
   def expand(prefix,mask,results,masks,rack):
     print('expand:', prefix, mask, masks, rack)
@@ -144,8 +131,8 @@ def search2(rack,patts):
           for ex in expand(prefix+word+' ', mask, results[1:], masks[1:], rack):
             yield ex
 
-  if not patts or len(patts)==0:
-    return scan(rack, 1, len(rack))
+  if not patts:
+    return fetch_matching_words(rack, min_len, max_len)
 
   now = datetime.datetime.now()
   results =[]
@@ -163,9 +150,7 @@ def search2(rack,patts):
     if beg: patt = '^'+patt
     # if end match then add $ suffix
     if end: patt = patt+'$'
-    min_len = len(mask)
-    max_len = len(rack)+len(mask)
-    matches = scan(rack, min_len, max_len, patt, mask)
+    matches = fetch_matching_words(rack, len(mask), max_len+len(mask), patt, mask)
     results.append(matches)
     masks.append(mask)
   print('compiling results took:', datetime.datetime.now()-now)

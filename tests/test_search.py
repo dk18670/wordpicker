@@ -18,9 +18,14 @@ class TestCases(unittest.TestCase):
     results = ['EH', 'EIK', 'ET', 'ETH', 'HE', 'HET', 'HEY', 'HI', 'HIE', 'HIKE', 'HIT', 'HYE', 'HYKE', 'HYTE', 'IT', 'KET', 'KEY', 'KHET', 'KHI', 'KI', 'KIT', 'KITE', 'KITH', 'KITHE', 'KY', 'KYE', 'KYTE', 'KYTHE', 'TE', 'THE', 'THEY', 'THY', 'TI', 'TIE', 'TIKE', 'TYE', 'TYKE', 'YE', 'YEH', 'YET', 'YETI', 'YIKE', 'YITE']
     self.assertEqual(matches, results)
 
-  def test_rack_with_pattern(self):
+  def test_rack_with_pattern_1(self):
     matches = search('KEITHY', 'TH')
     results = ['ETH', 'HETH', 'HITHE', 'HYTHE', 'KHETH', 'KITH', 'KITHE', 'KYTHE', 'TETH', 'THE', 'THEY', 'THY', 'TITHE', 'TYTHE']
+    self.assertEqual(matches, results)
+
+  def test_rack_with_pattern_2(self):
+    matches = search('GAME', 'D')
+    results = ['AD', 'AGED', 'DA', 'DAE', 'DAG', 'DAM', 'DAME', 'DE', 'DEG', 'ED', 'EGAD', 'GAD', 'GADE', 'GAED', 'GAMED', 'GED', 'MAD', 'MADE', 'MADGE', 'MEAD', 'MED']
     self.assertEqual(matches, results)
 
   @unittest.skip
