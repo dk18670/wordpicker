@@ -26,7 +26,7 @@ class WPCounter(collections.Counter):
     for c in s:
       if not cpy[c]:
         if not cpy['.']:
-          raise Exception('Depleted character:',c)
+          raise Exception('Depleted character: %s'%c)
         c = '.'
       cpy[c] -= 1
     return cpy
@@ -34,7 +34,7 @@ class WPCounter(collections.Counter):
   def __contains__(self,s):
     cpy = WPCounter(str(self))
     for c in s:
-      if c=='.' or c==' ':
+      if c=='.':
         continue
       if not cpy[c]:
         if not cpy['.']:
@@ -42,6 +42,20 @@ class WPCounter(collections.Counter):
         c = '.'
       cpy[c] -= 1
     return True
+
+  def substitutes(self,s):
+    cpy = WPCounter(str(self))
+    subs = []
+    for i,c in enumerate(s):
+      if c=='.':
+        continue
+      if not cpy[c]:
+        if not cpy['.']:
+          return None
+        subs.append(i)
+        c = '.'
+      cpy[c] -= 1
+    return subs
 
 
 def gen_match(chars,mask):
@@ -142,8 +156,9 @@ def search2(rack,patts):
           yield prefix+word
     else:
       for word in results[0]:
-        for ex in expand(rack-word,results[1:],prefix+word+' '):
-          yield ex
+        if word in rack:
+          for ex in expand(rack-word,results[1:],prefix+word+' '):
+            yield ex
 
 
   if not patts:

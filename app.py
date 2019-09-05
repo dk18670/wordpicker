@@ -78,7 +78,7 @@ def logged_out_html():
 
   info('%s: %s' % (page, values))
 
-  attrs = html_defaults(request.user_agent.string)
+  attrs = html_defaults(request.host,request.user_agent.string)
   attrs.update(values)
 
   func = globals().get("handle_%s" % page)
@@ -97,7 +97,7 @@ def logged_in_html():
   info('%s: %s' % (page, values))
   #info('%s: id:%d %s' % (page, id, values))
 
-  attrs = html_defaults(request.user_agent.string)
+  attrs = html_defaults(request.host,request.user_agent.string)
   attrs.update(values)
 
   func = globals().get("handle_%s" % page)

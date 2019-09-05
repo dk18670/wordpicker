@@ -12,6 +12,16 @@ class TestCases(unittest.TestCase):
     result = 'PAYER' in WPCounter('P.Y.R')
     self.assertEqual(result, True)
 
+  def test_sustitutes(self):
+    result = WPCounter('REAL..ING').substitutes('TRING')
+    self.assertEqual(result, [0])
+    result = WPCounter('REAL..ING').substitutes('HELP')
+    self.assertEqual(result, [0,3])
+    result = WPCounter('REAL..ING').substitutes('LEAVE')
+    self.assertEqual(result, [3,4])
+    result = WPCounter('REAL..ING').substitutes('ZIONIST')
+    self.assertEqual(result, None)
+
   def test_rack(self):
     matches = search('KEITHY', None)
     results = ['EH', 'EIK', 'ET', 'ETH', 'HE', 'HET', 'HEY', 'HI', 'HIE', 'HIKE', 'HIT', 'HYE', 'HYKE', 'HYTE', 'IT', 'KET', 'KEY', 'KHET', 'KHI', 'KI', 'KIT', 'KITE', 'KITH', 'KITHE', 'KY', 'KYE', 'KYTE', 'KYTHE', 'TE', 'THE', 'THEY', 'THY', 'TI', 'TIE', 'TIKE', 'TYE', 'TYKE', 'YE', 'YEH', 'YET', 'YETI', 'YIKE', 'YITE']

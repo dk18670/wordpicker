@@ -1,26 +1,26 @@
-import datetime, random
+import re, datetime, random
 
 from detectmobilebrowser import *
+
+HOST = 'wordpicker'
 
 TITLE    = 'Word Picker'
 SUBTITLE = 'Word Finder for Popular Word Games and Crosswords'
 YEAR     = datetime.date.today().year
-
-DOMAIN   = 'WordPicker.net'
-URL      = 'www.' + DOMAIN.lower()
-WWW      = 'http://' + URL
-CGI      = 'http://' + URL + '/cgi-bin' # TODO change to https://
 
 PROMO    = 'Word Finder for Popular Word Games and Crosswords'
 
 #PUBLISHERS = ['bannerplay','amazon-us-1','amazon-us-2','amazon-us-3','revenuehits']
 PUBLISHERS = ['google']
 
-def html_defaults(user_agent=None):
+def html_defaults(host,user_agent=None):
+  DOMAIN   = re.search('%s.*'%HOST,host).group()
+  URL      = 'www.' + DOMAIN.lower()
+  WWW      = 'http://' + URL
+
   return {
     'domain':     DOMAIN,
     'www':        WWW,
-    'cgi':        CGI,
     'title':      TITLE,
     'subtitle':   SUBTITLE,
     'year':       YEAR,
