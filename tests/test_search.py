@@ -1,6 +1,6 @@
 import unittest
 
-from search2 import WPCounter, gen_match, search, search2
+from search import WPCounter, gen_match, search, search2
 
 class TestCases(unittest.TestCase):
 

@@ -2,7 +2,9 @@ import re, datetime, random
 
 from detectmobilebrowser import *
 
-HOST = 'wordpicker'
+DOMAIN   = 'WordPicker.net'
+URL      = 'www.' + DOMAIN.lower()
+WWW      = 'http://' + URL
 
 TITLE    = 'Word Picker'
 SUBTITLE = 'Word Finder for Popular Word Games and Crosswords'
@@ -14,10 +16,6 @@ PROMO    = 'Word Finder for Popular Word Games and Crosswords'
 PUBLISHERS = ['google']
 
 def html_defaults(host,user_agent=None):
-  DOMAIN   = re.search('%s.*'%HOST,host, re.IGNORECASE).group()
-  URL      = 'www.' + DOMAIN.lower()
-  WWW      = 'http://' + URL
-
   return {
     'domain':     DOMAIN,
     'www':        WWW,

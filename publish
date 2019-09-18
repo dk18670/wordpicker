@@ -1,0 +1,3 @@
+#!/bin/sh
+
+cp -Ruv bower_components/angularjs/*.js static/js/

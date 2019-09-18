@@ -1,6 +1,10 @@
-import os, csv, re, datetime, collections, copy
+import os, re, datetime, collections, copy
 
-BASE_DIR = os.path.dirname(__file__)
+import database
+
+from dbutils import *
+
+db = database.Database(WORDPICKER_DB)
 
 
 class WPCounter(collections.Counter):
@@ -26,7 +30,7 @@ class WPCounter(collections.Counter):
     for c in s:
       if not cpy[c]:
         if not cpy['.']:
-          raise Exception('Depleted character:',c)
+          raise Exception('Depleted character: %s'%c)
         c = '.'
       cpy[c] -= 1
     return cpy
@@ -34,7 +38,7 @@ class WPCounter(collections.Counter):
   def __contains__(self,s):
     cpy = WPCounter(str(self))
     for c in s:
-      if c=='.' or c==' ':
+      if c=='.':
         continue
       if not cpy[c]:
         if not cpy['.']:
@@ -42,6 +46,20 @@ class WPCounter(collections.Counter):
         c = '.'
       cpy[c] -= 1
     return True
+
+  def substitutes(self,s):
+    cpy = WPCounter(str(self))
+    subs = []
+    for i,c in enumerate(s):
+      if c=='.':
+        continue
+      if not cpy[c]:
+        if not cpy['.']:
+          return None
+        subs.append(i)
+        c = '.'
+      cpy[c] -= 1
+    return subs
 
 
 def gen_match(chars,mask):
@@ -52,22 +70,22 @@ def gen_match(chars,mask):
 
 def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
   matches = []
-  with open(os.path.join(BASE_DIR,'sowpods.txt')) as file:
-    reader = csv.reader(file)
-    for row in reader:
-      word = row[0]
-      if not min_len <= len(word) <= max_len:
-        continue
-      if patt:
-        m = re.search(patt, word)
-        if m:
-          match = gen_match(m.group(), mask)
-          chars = word[:m.start()]+match+word[m.end():]
-          if not rack or chars in rack:
-            matches.append(word)
-      else:
-        if not rack or word in rack:
+  db.execute('SELECT * FROM sowpods')
+  for row in db.fetchall():
+    word = row[0]
+    if not min_len <= len(word) <= max_len:
+      continue
+    if patt:
+      m = re.search(patt, word)
+      if m:
+        #print(word,patt,m.group())
+        match = gen_match(m.group(), mask)
+        chars = word[:m.start()]+match+word[m.end():]
+        if not rack or chars in rack:
           matches.append(word)
+    else:
+      if not rack or word in rack:
+        matches.append(word)
   return matches
 
 
@@ -113,6 +131,7 @@ def search(rack,patt):
     patt, mask = process_patt(patt)
     min_len = len(mask)
     max_len += len(mask)
+    #print(mask)
   else:
     mask = None
 
@@ -133,14 +152,16 @@ def search2(rack,patts):
 
 
   def expand(rack,results,prefix=''):
+    #print('expand:', rack, results, prefix)
     if len(results)==1:
       for word in results[0]:
         if word in rack:
           yield prefix+word
     else:
       for word in results[0]:
-        for ex in expand(rack-word,results[1:],prefix+word+' '):
-          yield ex
+        if word in rack:
+          for ex in expand(rack-word,results[1:],prefix+word+' '):
+            yield ex
 
 
   if not patts:
@@ -154,14 +175,18 @@ def search2(rack,patts):
     matches = fetch_matching_words(rack, len(mask), max_len+len(mask), patt, mask)
     results.append(matches)
     masks.append(mask)
+  #print('compiling results took:', datetime.datetime.now()-start)
   start = datetime.datetime.now()
   n = 1
   for result in results:
+    #print(len(result), result)
     n *= len(result)
+  #print(n, 'combinations..')
   matches = []
   for ex in expand(rack,results):
     matches.append(ex)
   td = datetime.datetime.now()-start
   microseconds = (td.days*24*60*60 + td.seconds)*1000000 + td.microseconds
+  #print(td, '= %d per second' % (n*1000000/microseconds))
 
   return matches
