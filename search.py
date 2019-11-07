@@ -70,7 +70,7 @@ def gen_match(chars,mask):
 
 def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
   matches = []
-  db.execute('SELECT * FROM sowpods')
+  db.execute('SELECT * FROM sowpods ORDER BY word')
   for row in db.fetchall():
     word = row[0]
     if not min_len <= len(word) <= max_len:
@@ -81,23 +81,27 @@ def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
         #print(word,patt,m.group())
         match = gen_match(m.group(), mask)
         chars = word[:m.start()]+match+word[m.end():]
-        if not rack or chars in rack:
-          matches.append(word)
+        if not rack:
+          matches.append((word,None))
+        elif chars in rack:
+          matches.append((word,rack.substitutes(chars)))
     else:
-      if not rack or word in rack:
-        matches.append(word)
+      if not rack:
+        matches.append((word,None))
+      elif word in rack:
+        matches.append((word,rack.substitutes(word)))
   return matches
 
 
 def process_rack(rack):
-    # strip out any unwanted characters
-    rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
-    # replace ?_- chars with .
-    rack = re.sub('[?_\-]', '.', rack)
+  # strip out any unwanted characters
+  rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
+  # replace ?_- chars with .
+  rack = re.sub('[?_\-]', '.', rack)
 
-    max_len = len(rack)
+  max_len = len(rack)
 
-    return WPCounter(rack), max_len
+  return WPCounter(rack), max_len
 
 
 def process_patt(patt):
@@ -150,19 +154,17 @@ def search2(rack,patts):
   if rack:
     rack, max_len = process_rack(rack)
 
-
   def expand(rack,results,prefix=''):
     #print('expand:', rack, results, prefix)
     if len(results)==1:
-      for word in results[0]:
+      for word,subs in results[0]:
         if word in rack:
-          yield prefix+word
+          yield prefix+word, None # Need to return the substitues as well!
     else:
-      for word in results[0]:
+      for word,subs in results[0]:
         if word in rack:
           for ex in expand(rack-word,results[1:],prefix+word+' '):
             yield ex
-
 
   if not patts:
     return fetch_matching_words(rack, min_len, max_len)
@@ -176,12 +178,12 @@ def search2(rack,patts):
     results.append(matches)
     masks.append(mask)
   #print('compiling results took:', datetime.datetime.now()-start)
-  start = datetime.datetime.now()
   n = 1
   for result in results:
     #print(len(result), result)
     n *= len(result)
   #print(n, 'combinations..')
+  start = datetime.datetime.now()
   matches = []
   for ex in expand(rack,results):
     matches.append(ex)

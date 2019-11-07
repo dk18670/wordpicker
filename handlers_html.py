@@ -6,7 +6,7 @@ import search
 
 def special_case(rack, patt):
   if rack and rack.upper() == 'AWORDTHATISANANAGRAMOFLOW' and patt and patt.upper() == 'ITISALSOTHENAMEOFTHEBIRD':
-    return ['OWL']
+    return [('OWL',None)]
   return None
 
 def format_patt(patt, strict=False):
@@ -40,6 +40,8 @@ def handle_find(entry,values):
     matches = search.search(rack, format_patt(patt))
 
   def compare(a,b):
+    a = a[0]
+    b = b[0]
     d = len(a)-len(b)
     if d:
       return -d
@@ -56,13 +58,13 @@ def handle_find(entry,values):
 
     words = []
     last_len = 0
-    for match in matches:
-      l = len(match)
+    for word,subs in matches:
+      l = len(word)
       if l != last_len and len(words):
         entries.append({'len': last_len, 'words': ', '.join(words)})
         words = []
       last_len = l
-      words.append(match)
+      words.append(word)
     if len(words):
       entries.append({'len': last_len, 'words': ', '.join(words)})
 

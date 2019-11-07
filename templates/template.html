@@ -24,20 +24,14 @@
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="msapplication-TileImage" content="{{ url_for('static', filename='mstile-144x144.png') }}">
 
-    {% set ad = 'publishers/' + publisher1 + '-mobile.htm' %}
-    {% include ad %}
-
     {% include 'cookies.html' %}
+
+    {% include 'publishers/google.html' %}
   </head>
   <body ng-app="app" ng-controller="ctrl" ng-keypress="key($event)">
     <div align="center">
       <table border=0 style="width:100%;border-spacing:0px 0px;border-collapse:separate;min-width:640px;max-width:1280px">
         <tr>
-          {% if not is_mobile %}
-            <td width="160px" valign="top">
-              {% set ad = 'publishers/' + publisher1 + '.htm' %}
-              {% include ad %}
-          {% endif %}
           <td width="100%" align="center" valign="top" style="padding-left:20px;padding-right:20px">
             {% include 'header.html' %}
             <div>
@@ -46,11 +40,6 @@
             </div>
             {% block body %}
             {% endblock %}
-          {% if not is_mobile %}
-            <td width="160px" valign="top">
-              {% set ad = 'publishers/' + publisher2 + '.htm' %}
-              {% include ad %}
-          {% endif %}
         </tr>
         <tr>
           <td>

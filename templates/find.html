@@ -14,19 +14,11 @@
               {% if entries|length == 0 %}
                 <li>None found</li>
               {% else %}
-                {% if is_mobile %}
-                  {% set advert = True %}
-                {% endif %}
                 {% for entry in entries %}
                   <li>
                     {{ entry.len }} letter words:<br>
                     <span>{{ entry.words }}</span>
                   </li>
-                  {% if advert %}
-                    {% set advert = False %}
-                    {% set ad = 'publishers/' + publisher1 + '-banner.htm' %}
-                    {% include ad %}
-                  {% endif %}
                 {% endfor %}
               {% endif %}
             </ul>
