@@ -36,20 +36,15 @@ body{ font:normal 14px/18px Arial, Helvetica, sans-serif; color:#000; background
 .inner_add{padding: 0 31px; font: normal 13px/22px Arial; color: #666666;}
 .top_letter ul{padding: 0; margin: 0;}
 .top_letter ul li{margin: 30px 0 0 0; font: normal 30px/32px 'BerlinSansFBRegular'; color: #747474;}
-.top_letter ul li span{font-size: 22px; color: #88bd40;}
+.top_letter ul li p{margin: 10px 0 0 0; font: normal 22px/24px 'BerlinSansFBRegular'; color: #88bd40;}
+.top_letter ul li p span{color: #b79d70;}
 .mid_prt_bot{width: 100%; height: 7px; background: url(../images/midBot.png) no-repeat left bottom; background-size: 100%;}
-
-p {
-    color: #666666;
-    font: 15px/22px Arial;
-    padding: 15px 0 0;
-}
 
 /*===========footer=============*/
 
 .footer{border-top: 1px solid #c7cac8;}
 
-.find_box p{float: left; font: normal 14px/18px Arial; color: #a0a0a0; margin: -12px 10px 0 0;}
+.find_box p{float: left; font: normal 14px/18px Arial; color: #a0a0a0; margin: 0 10px 0 0;}
 .find_box ul{list-style:none; padding: 0; margin: 0;}
 .find_box ul li{float: left; margin: 0 10px 0 0;}
 
@@ -58,7 +53,7 @@ p {
 .foot_rit_nav ul li a{font: normal 12px/18px Arial; color: #a0a0a0;}
 .foot_rit_nav ul li a:hover{color: #f5811f;}
 
-.copy_prt p{font: normal 12px/18px Arial; color: #a0a0a0; margin: -12px 0 0 0}
+.copy_prt p{font: normal 12px/18px Arial; color: #a0a0a0; margin: 0 0 0 0}
 .copy_prt p span{color: #f5811f;}
 
 .social ul{list-style:none; padding:0; margin:0;}

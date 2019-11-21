@@ -29,13 +29,9 @@ def handle_find(entry,values):
   if matches is None:
     # See if it's a multiple word case
     if patt:
-      patts = []
-      parts = patt.replace(',','/').split('/')
-      if len(parts) > 1:
-        for part in parts:
-          patts.append(format_patt(part, True))
+      patts = patt.replace(',','/').split('/')
       if len(patts) > 1:
-        matches = search.search2(rack, patts)
+        matches = search.search2(rack, [format_patt(patt, True) for patt in patts])
   if matches is None:
     matches = search.search(rack, format_patt(patt))
 
@@ -46,10 +42,10 @@ def handle_find(entry,values):
       l = len(word)
       if l not in entries:
         entries[l] = []
-      entries[l].append(word)
+      entries[l].append((word,subs))
 
-    for l,words in entries.iteritems():
-      words.sort(key=lambda x:x[0])
+    for l,entry in entries.iteritems():
+      entry.sort(key=lambda x:x[0])
 
   return {
     'rack':    rack,
