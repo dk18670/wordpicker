@@ -39,39 +39,22 @@ def handle_find(entry,values):
   if matches is None:
     matches = search.search(rack, format_patt(patt))
 
-  def compare(a,b):
-    a = a[0]
-    b = b[0]
-    d = len(a)-len(b)
-    if d:
-      return -d
-    if a < b:
-      return -1
-    elif a > b:
-      return +1
-    return 0
-
-  entries = []
+  entries = {}
 
   if matches:
-    matches.sort(cmp=compare)
-
-    words = []
-    last_len = 0
     for word,subs in matches:
       l = len(word)
-      if l != last_len and len(words):
-        entries.append({'len': last_len, 'words': ', '.join(words)})
-        words = []
-      last_len = l
-      words.append(word)
-    if len(words):
-      entries.append({'len': last_len, 'words': ', '.join(words)})
+      if l not in entries:
+        entries[l] = []
+      entries[l].append(word)
+
+    for l,words in entries.iteritems():
+      words.sort(key=lambda x:x[0])
 
   return {
     'rack':    rack,
     'patt':    patt,
-    'entries': entries
+    'entries': sorted(entries.iteritems(), key=lambda x:x[0], reverse=True),
   }
 
 # Word Picker - Game

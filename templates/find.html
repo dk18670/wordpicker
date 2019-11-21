@@ -14,10 +14,10 @@
               {% if entries|length == 0 %}
                 <li>None found</li>
               {% else %}
-                {% for entry in entries %}
+                {% for l,words in entries %}
                   <li>
-                    {{ entry.len }} letter words:<br>
-                    <span>{{ entry.words }}</span>
+                    {{ l }} letter words:<br>
+                    <span>{{ ', '.join(words) }}</span>
                   </li>
                 {% endfor %}
               {% endif %}
