@@ -139,9 +139,7 @@ def search(rack,patt):
   else:
     mask = None
 
-  matches = fetch_matching_words(rack, min_len, max_len, patt, mask)
-
-  return matches if len(matches) else None
+  return fetch_matching_words(rack, min_len, max_len, patt, mask)
 
 
 def search2(rack,patts):
@@ -159,7 +157,7 @@ def search2(rack,patts):
     if len(results)==1:
       for word,subs in results[0]:
         if word in rack:
-          yield prefix+word, None # Need to return the substitues as well!
+          yield prefix+word, [] # Need to return the substitues as well!
     else:
       for word,subs in results[0]:
         if word in rack:

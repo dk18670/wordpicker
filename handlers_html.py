@@ -24,6 +24,8 @@ def handle_find(entry,values):
   rack = values.get('rack')
   patt = values.get('patt')
 
+  multi = False
+
   # See if it's a special case (cookie)
   matches = special_case(rack, patt)
   if matches is None:
@@ -31,7 +33,8 @@ def handle_find(entry,values):
     if patt:
       patts = patt.replace(',','/').split('/')
       if len(patts) > 1:
-        matches = search.search2(rack, [format_patt(patt, True) for patt in patts])
+        matches = search.search2(rack, [format_patt(v, True) for v in patts])
+        multi = True
   if matches is None:
     matches = search.search(rack, format_patt(patt))
 
@@ -51,6 +54,7 @@ def handle_find(entry,values):
     'rack':    rack,
     'patt':    patt,
     'entries': sorted(entries.iteritems(), key=lambda x:x[0], reverse=True),
+    'multi':   multi,
   }
 
 # Word Picker - Game

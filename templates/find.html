@@ -6,7 +6,7 @@
     <div class="mid_prt_mid" align="left">
       <div class="mid_main">
         <div class="mid_main_head">
-          <h3>Words found for rack <span>{{ rack|e }}</span>{% if patt %} with pattern <span>{{ patt|e }}</span>{% endif %}</h3>
+          <h3>{% if multi %}Combinations found{% else %}Words found{% endif %} for rack <span>{{ rack|e }}</span>{% if patt %} with pattern <span>{{ patt|e }}</span>{% endif %}</h3>
         </div>
         <div class="inner_add">
           <div class="top_letter">
@@ -16,7 +16,9 @@
               {% else %}
                 {% for l,entry in entries %}
                   <li>
-                    {{ l }} letter words:<br>
+                    {% if not multi %}
+                      {{ l }} letter words:<br>
+                    {% endif %}
                     <p>
                       {% for word,subs in entry %}
                         {%- if loop.index0 -%}, {% endif %}
