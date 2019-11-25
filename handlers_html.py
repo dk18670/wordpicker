@@ -1,5 +1,7 @@
 import re
 
+from wpcounter import WPCounter
+
 import search
 
 # Word Picker - Search Engine
@@ -8,6 +10,18 @@ def special_case(rack, patt):
   if rack and rack.upper() == 'AWORDTHATISANANAGRAMOFLOW' and patt and patt.upper() == 'ITISALSOTHENAMEOFTHEBIRD':
     return [('OWL',None)]
   return None
+
+def cleanse(entry,chars):
+  if not entry:
+    return None
+
+  # Convert to upper case
+  entry = entry.upper()
+  # replace ?_- chars with .
+  entry = re.sub(r'[?_\-]', '.', entry)
+  # strip out any unwanted characters
+  entry = re.sub(r'[^A-Z\.%s]'%chars,'',entry)
+  return entry
 
 def format_patt(patt, strict=False):
   # if patt is an integer then treat as a fixed length word
@@ -21,38 +35,45 @@ def format_patt(patt, strict=False):
   return patt
 
 def handle_find(entry,values):
-  rack = values.get('rack')
-  patt = values.get('patt')
+  rack = rack_in = values.get('rack')
+  patt = patt_in = values.get('patt')
 
   multi = False
 
+  rack = cleanse(rack,'')
+  patt = cleanse(patt,'0-9,')
+
   # See if it's a special case (cookie)
   matches = special_case(rack, patt)
+
   if matches is None:
     # See if it's a multiple word case
-    if patt:
-      patts = patt.replace(',','/').split('/')
-      if len(patts) > 1:
-        matches = search.search2(rack, [format_patt(v, True) for v in patts])
-        multi = True
-  if matches is None:
-    matches = search.search(rack, format_patt(patt))
+    patts = patt.split(',') if patt else []
+    patts = [format_patt(v,len(patts)>1) for v in patts]
+    if len(patts) > 1:
+      matches = search.search2(rack, patts)
+      multi = True
+    elif len(patts) == 1:
+      matches = search.search(rack, patts[0])
+    else:
+      matches = search.search(rack, None)
 
   entries = {}
 
   if matches:
-    for word,subs in matches:
+    rack = WPCounter(rack)
+    for word in matches:
       l = len(word)
       if l not in entries:
         entries[l] = []
-      entries[l].append((word,subs))
+      entries[l].append((word,rack.substitutes(word)))
 
     for l,entry in entries.iteritems():
       entry.sort(key=lambda x:x[0])
 
   return {
-    'rack':    rack,
-    'patt':    patt,
+    'rack':    rack_in,
+    'patt':    patt_in,
     'entries': sorted(entries.iteritems(), key=lambda x:x[0], reverse=True),
     'multi':   multi,
   }

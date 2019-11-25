@@ -1,65 +1,12 @@
-import os, re, datetime, collections, copy
+import os, re, datetime
+
+from wpcounter import WPCounter
 
 import database
 
 from dbutils import *
 
 db = database.Database(WORDPICKER_DB)
-
-
-class WPCounter(collections.Counter):
-  def __init__(self,s):
-    super(WPCounter,self).__init__()
-    for c in s:
-      self[c] += 1
-
-  def __str__(self):
-    return ''.join([k*v for k,v in self.items()])
-
-  def __repr__(self):
-    return 'WPCounter('+str(self)+')'
-
-  def __add__(self,s):
-    cpy = WPCounter(str(self))
-    for c in s:
-      cpy[c] += 1
-    return cpy
-
-  def __sub__(self,s):
-    cpy = WPCounter(str(self))
-    for c in s:
-      if not cpy[c]:
-        if not cpy['.']:
-          raise Exception('Depleted character: %s'%c)
-        c = '.'
-      cpy[c] -= 1
-    return cpy
-
-  def __contains__(self,s):
-    cpy = WPCounter(str(self))
-    for c in s:
-      if c=='.':
-        continue
-      if not cpy[c]:
-        if not cpy['.']:
-          return False
-        c = '.'
-      cpy[c] -= 1
-    return True
-
-  def substitutes(self,s):
-    cpy = WPCounter(str(self))
-    subs = []
-    for i,c in enumerate(s):
-      if c=='.':
-        continue
-      if not cpy[c]:
-        if not cpy['.']:
-          return None
-        subs.append(i)
-        c = '.'
-      cpy[c] -= 1
-    return subs
 
 
 def gen_match(chars,mask):
@@ -82,23 +29,18 @@ def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
         match = gen_match(m.group(), mask)
         chars = word[:m.start()]+match+word[m.end():]
         if not rack:
-          matches.append((word,None))
+          matches.append(word)
         elif chars in rack:
-          matches.append((word,rack.substitutes(chars)))
+          matches.append(word)
     else:
       if not rack:
-        matches.append((word,None))
+        matches.append(word)
       elif word in rack:
-        matches.append((word,rack.substitutes(word)))
+        matches.append(word)
   return matches
 
 
 def process_rack(rack):
-  # strip out any unwanted characters
-  rack = re.sub('[^A-Z\.?_\-]','',rack.upper())
-  # replace ?_- chars with .
-  rack = re.sub('[?_\-]', '.', rack)
-
   max_len = len(rack)
 
   return WPCounter(rack), max_len
@@ -155,11 +97,11 @@ def search2(rack,patts):
   def expand(rack,results,prefix=''):
     #print('expand:', rack, results, prefix)
     if len(results)==1:
-      for word,subs in results[0]:
+      for word in results[0]:
         if word in rack:
-          yield prefix+word, [] # Need to return the substitues as well!
+          yield prefix+word
     else:
-      for word,subs in results[0]:
+      for word in results[0]:
         if word in rack:
           for ex in expand(rack-word,results[1:],prefix+word+' '):
             yield ex
