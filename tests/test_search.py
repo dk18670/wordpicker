@@ -49,6 +49,11 @@ class TestCases(unittest.TestCase):
     results = ['AD', 'AGED', 'DA', 'DAE', 'DAG', 'DAM', 'DAME', 'DE', 'DEG', 'ED', 'EGAD', 'GAD', 'GADE', 'GAED', 'GAMED', 'GED', 'MAD', 'MADE', 'MADGE', 'MEAD', 'MED']
     self.assertEqual(matches, results)
 
+  def test_rack_with_pattern_3(self):
+    matches = search('KEITH', '$...$')
+    results = ['EIK', 'ETH', 'HET', 'HIE', 'HIT', 'KET', 'KHI', 'KIT', 'THE', 'TIE']
+    self.assertEqual(matches, results)
+
   def test_rack_with_multi_pattern(self):
     matches = search2('CHELSAY', ['$...$','$....$'])
     results = [ 'ACH LEYS', 'ACH LYES', 'ACH LYSE', 'ACH SLEY', 'ALS YECH', 'AYS LECH', 'CEL ASHY', 'CEL HAYS', 'CEL SHAY', 'CEL YAHS', 'CHA LEYS', 'CHA LYES', 'CHA LYSE', 'CHA SLEY', 'CHE LAYS', 'CHE SLAY', 'CLY HAES', 'CLY SHEA', 'EAS LYCH', 'ECH LAYS', 'ECH SLAY', 'EHS ACYL', 'EHS CLAY', 'EHS LACY', 'ELS ACHY', 'ELS CHAY', 'HAY CELS', 'HES ACYL', 'HES CLAY', 'HES LACY', 'HEY LACS', 'HYE LACS', 'LAC HEYS', 'LAC HYES', 'LAH SCYE', 'LAH SYCE', 'LAS YECH', 'LAY SECH', 'LES ACHY', 'LES CHAY', 'LEY CASH', 'LEY CHAS', 'LYE CASH', 'LYE CHAS', 'SAC HYLE', 'SAE LYCH', 'SAL YECH', 'SAY LECH', 'SEA LYCH', 'SEC HYLA', 'SEL ACHY', 'SEL CHAY', 'SEY CHAL', 'SHE ACYL', 'SHE CLAY', 'SHE LACY', 'SHY ALEC', 'SHY LACE', 'SLY ACHE', 'SLY EACH', 'SYE CHAL', 'YAH CELS', 'YEH LACS', 'YES CHAL']

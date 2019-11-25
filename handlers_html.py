@@ -26,7 +26,7 @@ def cleanse(entry,chars):
 def format_patt(patt, strict=False):
   # if patt is an integer then treat as a fixed length word
   try:
-    patt = '?'*int(patt)
+    patt = '.'*int(patt)
     strict = True
   except:
     pass
@@ -41,7 +41,7 @@ def handle_find(entry,values):
   multi = False
 
   rack = cleanse(rack,'')
-  patt = cleanse(patt,'0-9,')
+  patt = cleanse(patt,'0-9,\$\[\]')
 
   # See if it's a special case (cookie)
   matches = special_case(rack, patt)
@@ -61,12 +61,15 @@ def handle_find(entry,values):
   entries = {}
 
   if matches:
-    rack = WPCounter(rack)
+    if rack: 
+      rack = WPCounter(rack)
+      if len(patts) == 1:
+        rack += re.sub(r'[^A-Z]','',patts[0])
     for word in matches:
       l = len(word)
       if l not in entries:
         entries[l] = []
-      entries[l].append((word,rack.substitutes(word)))
+      entries[l].append((word,rack.substitutes(word) if rack else []))
 
     for l,entry in entries.iteritems():
       entry.sort(key=lambda x:x[0])

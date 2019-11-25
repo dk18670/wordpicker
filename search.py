@@ -49,10 +49,8 @@ def process_rack(rack):
 def process_patt(patt):
   beg = patt.startswith('$')
   end = patt.endswith('$')
-  # strip out any unwanted characters
-  patt = re.sub('[^A-Z\.?_\-\[\]]','',patt.upper())
-  # replace ?_- chars with .
-  patt = re.sub('[?_\-]', '.', patt)
+  # remove $ chars
+  patt = re.sub(r'\$',r'',patt)
   # compose a mask to remove matched chars
   mask = re.sub('\[.*?\]','.',patt)
   # if beginning match then add ^ prefix
