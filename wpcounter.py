@@ -44,7 +44,8 @@ class WPCounter(collections.Counter):
     cpy = WPCounter(str(self))
     subs = []
     for i,c in enumerate(s):
-      if c=='.' or c==' ':
+      # Ignore non-alpha chars
+      if c==' ':
         continue
       if not cpy[c]:
         if not cpy['.']:

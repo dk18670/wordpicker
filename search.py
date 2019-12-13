@@ -37,6 +37,7 @@ def fetch_matching_words(rack, min_len, max_len, patt=None, mask=None):
         matches.append(word)
       elif word in rack:
         matches.append(word)
+  db.commit()
   return matches
 
 

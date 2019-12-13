@@ -1,28 +1,13 @@
 import unittest
 
-from wpcounter import WPCounter
 from search import gen_match, search, search2
 
 class TestCases(unittest.TestCase):
-  maxDiff = None
+  #maxDiff = None
 
   def test_gen_match(self):
     result = gen_match('PAYER', 'P.Y.R')
     self.assertEqual(result, '.A.E.')
-
-  def test_canmatch(self):
-    result = 'PAYER' in WPCounter('P.Y.R')
-    self.assertEqual(result, True)
-
-  def test_sustitutes(self):
-    result = WPCounter('REAL..ING').substitutes('TRING')
-    self.assertEqual(result, [0])
-    result = WPCounter('REAL..ING').substitutes('HELP')
-    self.assertEqual(result, [0,3])
-    result = WPCounter('REAL..ING').substitutes('LEAVE')
-    self.assertEqual(result, [3,4])
-    result = WPCounter('REAL..ING').substitutes('ZIONIST')
-    self.assertEqual(result, None)
 
   def test_rack(self):
     matches = search('KEITHY', None)
@@ -54,14 +39,14 @@ class TestCases(unittest.TestCase):
     results = ['EIK', 'ETH', 'HET', 'HIE', 'HIT', 'KET', 'KHI', 'KIT', 'THE', 'TIE']
     self.assertEqual(matches, results)
 
-  def test_rack_with_multi_pattern(self):
-    matches = search2('CHELSAY', ['$...$','$....$'])
-    results = [ 'ACH LEYS', 'ACH LYES', 'ACH LYSE', 'ACH SLEY', 'ALS YECH', 'AYS LECH', 'CEL ASHY', 'CEL HAYS', 'CEL SHAY', 'CEL YAHS', 'CHA LEYS', 'CHA LYES', 'CHA LYSE', 'CHA SLEY', 'CHE LAYS', 'CHE SLAY', 'CLY HAES', 'CLY SHEA', 'EAS LYCH', 'ECH LAYS', 'ECH SLAY', 'EHS ACYL', 'EHS CLAY', 'EHS LACY', 'ELS ACHY', 'ELS CHAY', 'HAY CELS', 'HES ACYL', 'HES CLAY', 'HES LACY', 'HEY LACS', 'HYE LACS', 'LAC HEYS', 'LAC HYES', 'LAH SCYE', 'LAH SYCE', 'LAS YECH', 'LAY SECH', 'LES ACHY', 'LES CHAY', 'LEY CASH', 'LEY CHAS', 'LYE CASH', 'LYE CHAS', 'SAC HYLE', 'SAE LYCH', 'SAL YECH', 'SAY LECH', 'SEA LYCH', 'SEC HYLA', 'SEL ACHY', 'SEL CHAY', 'SEY CHAL', 'SHE ACYL', 'SHE CLAY', 'SHE LACY', 'SHY ALEC', 'SHY LACE', 'SLY ACHE', 'SLY EACH', 'SYE CHAL', 'YAH CELS', 'YEH LACS', 'YES CHAL']
-    self.assertEqual(matches, results)
-
   def test_pattern(self):
     matches = search('', '$AZON')
     results = ['AZON', 'AZONAL', 'AZONIC', 'AZONS']
+    self.assertEqual(matches, results)
+
+  def test_rack_with_multi_pattern(self):
+    matches = search2('CHELSAY', ['$...$','$....$'])
+    results = [ 'ACH LEYS', 'ACH LYES', 'ACH LYSE', 'ACH SLEY', 'ALS YECH', 'AYS LECH', 'CEL ASHY', 'CEL HAYS', 'CEL SHAY', 'CEL YAHS', 'CHA LEYS', 'CHA LYES', 'CHA LYSE', 'CHA SLEY', 'CHE LAYS', 'CHE SLAY', 'CLY HAES', 'CLY SHEA', 'EAS LYCH', 'ECH LAYS', 'ECH SLAY', 'EHS ACYL', 'EHS CLAY', 'EHS LACY', 'ELS ACHY', 'ELS CHAY', 'HAY CELS', 'HES ACYL', 'HES CLAY', 'HES LACY', 'HEY LACS', 'HYE LACS', 'LAC HEYS', 'LAC HYES', 'LAH SCYE', 'LAH SYCE', 'LAS YECH', 'LAY SECH', 'LES ACHY', 'LES CHAY', 'LEY CASH', 'LEY CHAS', 'LYE CASH', 'LYE CHAS', 'SAC HYLE', 'SAE LYCH', 'SAL YECH', 'SAY LECH', 'SEA LYCH', 'SEC HYLA', 'SEL ACHY', 'SEL CHAY', 'SEY CHAL', 'SHE ACYL', 'SHE CLAY', 'SHE LACY', 'SHY ALEC', 'SHY LACE', 'SLY ACHE', 'SLY EACH', 'SYE CHAL', 'YAH CELS', 'YEH LACS', 'YES CHAL']
     self.assertEqual(matches, results)
 
 if __name__ =='__main__':
